@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+    php:
+        container_name: blog-php
+        build:
+            context: ./php
+            args:
+                TIMEZONE: ${TIMEZONE}
+        volumes:
+            - ../:/var/www/blog
+        environment:
+            XDEBUG_CLIENT_HOST: 172.17.0.1
+            XDEBUG_CLIENT_PORT: 9003
+            PHP_IDE_CONFIG: 'serverName=blog-debug'
+    nginx:
+        image: nginx:alpine
+        container_name: blog-nginx
+        restart: unless-stopped
+        ports:
+            - "8098:80"
+        volumes:
+            - ../:/var/www/blog
+            - ./nginx:/etc/nginx/conf.d
